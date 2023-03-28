@@ -1,0 +1,43 @@
+%%
+%start
+clear
+clc
+load EEG.mat
+fs=1000;
+N0=length(EEG);
+F0=fs/N0;
+N=5120;
+K=5;
+L=1024;
+S1=0;
+%%
+%calcbartlett
+for i=1:K
+    t=((i-1)*L+1:i*L);
+    x=EEG(t);
+    S1=S1+abs(fft(x)).^2;
+end
+S1=S1/N0;
+%%
+%calcualateWelch
+w=hanning(L,'periodic');
+S2=pwelch(EEG(1:N),w,50,L);
+%%
+%draw
+subplot(3,1,1)
+plot(0:N-1,EEG(1:N))
+ylabel('幅度/μV')
+xlabel('n')
+title('N=5120,时域波形')
+xlim([0,5120]);
+subplot(3,1,2)
+plot((0:300)*F0,S1(1:301),'b')
+xlabel('f/Hz')
+ylabel('功率谱')
+title('Bartlett法,K=5,L=1024')
+subplot(3,1,3)
+plot((0:300)*F0,S2(1:301),'r')
+xlabel('f/Hz')
+ylabel('功率谱')
+title('Welch法,L=1024,重叠率50%，hanning窗')
+

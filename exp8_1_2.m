@@ -1,0 +1,20 @@
+%%
+%start
+clear
+clc
+load noise.mat
+A1=0.2;A2=2;f1=0.32;f2=0.35;fs=1;N=1024;T=1/fs;
+noise=noise(1:1:N);
+N2=128;
+t2=0:1:N2-1;
+%%
+%sample
+x2=A1*cos(2*pi*f1*t2)+A2*cos(2*pi*f2*t2)+noise(t2+1);
+%%
+%calculate
+S2=abs(fft(x2)).^2/N2;
+%%
+%pic
+plot(t2(1:0.5*N2)/N2,S2(1:0.5*N2),'r');
+title('N=128');
+xlabel('f/Hz');ylabel('功率谱');

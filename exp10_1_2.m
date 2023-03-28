@@ -1,0 +1,29 @@
+p=6;
+len=2500;
+miu=[5e-4 3e-3 5e-2 0.3 0.5];
+W=zeros(5,p);
+sub=zeros(5,len-p+1);
+ep=zeros(5,len-p+1);
+for i=1:5
+for j=p:len
+ep(i,j-5)=d(j)-X(j-5:j)*W(i,:)';
+W(i,:)=W(i,:)+miu(i)*ep(i,j-5)*X(j-5:j);
+end
+sub(i,:)=d(p:len)-ep(i,:);
+end
+subplot(5,2,1),plot(ep(1,:),'r'),title("μ=0.0005时的ε"),xlabel("N")
+subplot(5,2,2),plot(sub(1,:)),title("μ=0.0005时的d-ε"),xlabel("N")
+subplot(5,2,3),plot(ep(2,:),'r'),title("μ=0.003时的ε"),xlabel("N")
+subplot(5,2,4),plot(sub(2,:)),title("μ=0.003时的d-ε"),xlabel("N")
+subplot(5,2,5),plot(ep(3,:),'r'),title("μ=0.05时的ε"),xlabel("N")
+subplot(5,2,6),plot(sub(3,:)),title("μ=0.05时的d-ε"),xlabel("N")
+subplot(5,2,7),plot(ep(4,:),'r'),title("μ=0.3时的ε"),xlabel("N")
+subplot(5,2,8),plot(sub(4,:)),title("μ=0.3时的d-ε"),xlabel("N")
+subplot(5,2,9),plot(ep(5,:),'r'),title("μ=0.5时的ε"),xlabel("N")
+subplot(5,2,10),plot(sub(5,:)),title("μ=0.5时的d-ε"),xlabel("N")
+R=xcorr(X,'biased');
+r=R(len:end);
+Rx=toeplitz(r);
+[x,y]=eig(Rx);
+lamda=max(max(y));
+mMax=2/lamda
